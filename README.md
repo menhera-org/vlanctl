@@ -31,6 +31,10 @@ RequiredBy=systemd-networkd.service
 
 ## Configuration
 
+Configuration is at `/etc/vlanctl.toml` plus `/etc/vlanctl.toml.d/*.toml`
+drop-ins. Dropins are preferred, in their dictionary order 
+(last one wins), and they are merged.
+
 ```toml
 [parent.ens1]
 mtu = 9216 # default: unset
@@ -163,7 +167,7 @@ with its own `.network` files.
 With the feature `install` (default on), `vlanctl install` command
 is available.
 
-It copies its own binary file atomically into `/usr/sbin/vlanctl`,
+It copies its own binary file atomically into `/usr/local/sbin/vlanctl`,
 and installs its own systemd unit at `/usr/local/lib/systemd/system`
 (creating directories as necessary), and enables the service.
 
