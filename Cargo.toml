@@ -1,0 +1,10 @@
+[package]
+name = "vlanctl"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+license = "Apache-2.0 OR MPL-2.0"
+
+[dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+toml = "1.2.2"
