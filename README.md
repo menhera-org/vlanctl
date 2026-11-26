@@ -28,12 +28,15 @@ RequiredBy=systemd-networkd.service
 
 - Generate: `vlanctl generate`. Generates network files at `/run/systemd/network`. The directory is created if not exists: `std::fs::create_dir_all("/run/systemd/network")?;`.
 - Apply: `vlanctl apply`. Generate plus `networkctl reload`.
+- Generation removes obsolete `.network` and `.netdev` files with the `01-vlanctl-` prefix. Existing kernel interfaces may need to be removed separately.
 
 ## Configuration
 
 Configuration is at `/etc/vlanctl.toml` plus `/etc/vlanctl.toml.d/*.toml`
-drop-ins. Dropins are preferred, in their dictionary order 
-(last one wins), and they are merged.
+drop-ins. Drop-ins load in lexicographic filename order after the main file.
+Tables merge recursively, and later values replace earlier scalars and arrays.
+To override a parent's VLAN array, list every VLAN you want to keep for that
+parent in the later file. At least one configuration file must exist.
 
 ```toml
 [parent.ens1]
@@ -45,11 +48,10 @@ mac_address = "60:a4:34:42:22:22" # default: unset
 id = 100
 
 # optional; host macvlan is not created if none.
-host_interface = {
-    name = "en-100" # required
-    mac_address = "60:a4:34:40:00:01" # default: `60:a4:34:4x:xx:xx` derived from `SHA256(hostname || <NUL> || name)`
-    mtu = 1500 # default: unset
-}
+[parent.ens1.vlan.host_interface]
+name = "en-100" # required
+mac_address = "60:a4:34:40:00:01" # default: the first 20 bits of SHA256(hostname || NUL || name) fill 60:a4:34:4x:xx:xx
+mtu = 1500 # default: unset
 
 [[parent.ens1.vlan]]
 id = 200
@@ -168,8 +170,10 @@ With the feature `install` (default on), `vlanctl install` command
 is available.
 
 It copies its own binary file atomically into `/usr/local/sbin/vlanctl`,
-and installs its own systemd unit at `/usr/local/lib/systemd/system`
-(creating directories as necessary), and enables the service.
+installs its embedded systemd unit at `/usr/local/lib/systemd/system`,
+and enables the service. It creates the installation directories as needed.
+It also creates `/etc/vlanctl.toml.d/` and installs a commented-out
+example at `/etc/vlanctl.toml` if those paths are missing.
 
 ## Runtime library dependencies
 

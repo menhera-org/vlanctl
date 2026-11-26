@@ -1,0 +1,19 @@
+# Configure VLANs by uncommenting the example below and adjusting the
+# interface names and VLAN IDs. Additional settings can go in
+# /etc/vlanctl.toml.d/*.toml.
+
+# [parent.ens1]
+# mtu = 9216
+# vlan_ifname_prefix = "v"
+# mac_address = "60:a4:34:42:22:22"
+
+# [[parent.ens1.vlan]]
+# id = 100
+
+# [parent.ens1.vlan.host_interface]
+# name = "en-100"
+# mac_address = "60:a4:34:40:00:01"
+# mtu = 1500
+
+# [[parent.ens1.vlan]]
+# id = 200

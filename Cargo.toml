@@ -5,6 +5,12 @@ edition = "2024"
 rust-version = "1.89"
 license = "Apache-2.0 OR MPL-2.0"
 
+[features]
+default = ["install"]
+install = []
+
 [dependencies]
 serde = { version = "1.0.229", features = ["derive"] }
+sha2 = "0.10.9"
+tempfile = "3.27.0"
 toml = "1.2.2"
