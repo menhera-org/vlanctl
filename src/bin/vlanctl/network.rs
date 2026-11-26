@@ -131,12 +131,12 @@ mod tests {
 
     #[test]
     fn renders_the_readme_example() {
-        let mut blocks = include_str!("../README.md").split("\x60\x60\x60");
+        let mut blocks = include_str!("../../../README.md").split("\x60\x60\x60");
         let service = blocks.nth(1).unwrap();
         #[cfg(feature = "install")]
         assert_eq!(
             service.trim_start(),
-            include_str!("../vlanctl-generator.service")
+            include_str!("../../../vlanctl-generator.service")
         );
         #[cfg(not(feature = "install"))]
         let _ = service;

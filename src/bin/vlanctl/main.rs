@@ -147,13 +147,13 @@ fn install() -> Result<()> {
         Ok(())
     })?;
     let service = stage(unit_dir, 0o644, |file| {
-        file.write_all(include_bytes!("../vlanctl-generator.service"))
+        file.write_all(include_bytes!("../../../vlanctl-generator.service"))
     })?;
 
     fs::create_dir_all(CONFIG_DROPINS)
         .map_err(|error| format!("create {CONFIG_DROPINS}: {error}"))?;
     let config = stage(Path::new("/etc"), 0o644, |file| {
-        file.write_all(include_bytes!("../vlanctl.toml.example"))
+        file.write_all(include_bytes!("../../../vlanctl.toml.example"))
     })?;
     match config.persist_noclobber(CONFIG_FILE) {
         Ok(()) => {}
